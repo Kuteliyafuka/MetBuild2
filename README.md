@@ -4,7 +4,7 @@
 
 MetBuild2 is designed for DNA methylation age predictor construction based on personalized CpG sites and GEO datasets.
 
-though there have already been many methylation age prediction website tools, they are constructed for universal applicability in most tissues, resulting in possible inaccuracy to specific tissues. Moreover, they require data from a large amount of CpG sites, usually produced from illumina 450K/850K array with high cost. 
+Though there have already been many methylation age prediction website tools, they are constructed for universal applicability in most tissues, resulting in possible inaccuracy to specific tissues. Moreover, they require data from a large amount of CpG sites, usually produced from illumina 450K/850K array with high cost. 
 
 This MetBuild2 aims to provide convenience for cost-effective methylation detection,such as BBA-seq and pyrosequencing, to predict age by sacrificing accuracy for reduction of labor and cost in an acceptable way.
 
