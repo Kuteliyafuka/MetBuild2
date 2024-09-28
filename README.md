@@ -18,21 +18,27 @@ This MetBuild2 aims to provide convenience for cost-effective methylation detect
 
 ```
 library(MetBuild2)
+library(glmnet)
 
-selected_CpGs <- c('cg22345769','cg00329615','cg19283806','cg11807280','cg16867657','cg18618815')
-datasets_names <- c("GSE67705","GSE52588","GSE77445","GSE41169","GSE32148")
-#数据下载及预处理
+datasets_names <- c("GSE67705","GSE52588")
+
 geo_data <- MetDataDownload(datasets_names)
-extracted_list <- MetDataExtract(geo_data,selected_CpGs = selected_CpGs)
+beta_value_list = list()
+extracted_list <- MetDataExtract_x(geo_data)
+mergedData_for_selection <- MetDataMerge(extracted_list)
+selected_CpGs <- CpGs_select(mergedData = mergedData_for_selection,top_CpGs_number = 45)
+
+beta_value_list = list()
+extracted_list <- MetDataExtract(geo_data,selected_CpGs)
 mergedData <- MetDataMerge(extracted_list)
-#模型训练
+
 PartitionedData <- MetDataPartition(mergedData)
 ElasticNetModel <- MetDataTrainElasticNet(PartitionedData)
-LassoModel <- MetDataTrainLasso(PartitionedData)
-MultiRegressionModel<- MetDataTrainMultiRegression(PartitionedData)
-#模型评估并进行年龄预测
-result <- MetDataModelEvaluation(model_name,PartitionedData)
-predicted_age <- predict(model_name,your_β_value_matrix)
+trainSet <- PartitionedData[['trainSet']]
+beta_matrix_train <- as.matrix(trainSet[,-1])
+glmnet.Training.CV = glmnet::cv.glmnet(beta_matrix_train, PartitionedData[['age_train']], nfolds=10,alpha = 0.5,family="gaussian")
+lambda.glmnet.Training = glmnet.Training.CV$lambda.min
+result <- MetDataModelEvaluation(ElasticNetModel,PartitionedData)
 ```
 ![image-20240902090502729](https://github.com/user-attachments/assets/292a945e-a568-4bb0-bd96-b4dd35b95187)
 
